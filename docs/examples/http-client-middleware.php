@@ -32,8 +32,22 @@ class StripTagsMiddleware implements ClientMiddlewareInterface
     }
 }
 
+class HelloWorldMiddleware implements ClientMiddlewareInterface
+{
+    public function __construct(
+        private readonly \Psr\Http\Message\StreamFactoryInterface $streamFactory,
+    ){}
+
+    public function process(RequestInterface $request, ClientInterface $transport): ResponseInterface
+    {
+        $response = $transport->sendRequest($request);
+        return $response->withBody($this->streamFactory->createStream(
+            'Hello World!'
+        ));
+    }
+}
+
 $container = (new ContainerBuilder())->build();
-$pool = new ConnectionPool();
 $dispatcher = (new ClientMiddlewareDispatcher(new ClientMiddlewareFactory($container)));
 $dispatcher2 = $dispatcher->withClientMiddlewares([new StripTagsMiddleware($factory)]);
 $transport = new CurlClient($factory);
@@ -43,7 +57,7 @@ $request = $factory->createRequest('GET', 'http://example.com');
 
 echo "\n\nWITH middleware\n";
 echo "request: " . $request->getMethod() . " " . (string)$request->getUri() . "\n";
-$response = (new HttpClient($pool, $dispatcher2, $transport))->sendRequest($request);
+$response = (new HttpClient($dispatcher2, $transport))->sendRequest($request);
 echo "response: \n";
 echo "  -- status: " . $response->getStatusCode() . "\n";
 echo "  -- content: \n\n";
@@ -52,10 +66,21 @@ echo "  -- end \n\n\n";
 
 echo "\n\nWITHOUT middleware\n";
 echo "request: " . $request->getMethod() . " " . (string)$request->getUri() . "\n";
-$response = (new HttpClient($pool, $dispatcher, $transport))->sendRequest($request);
+$response = (new HttpClient($dispatcher, $transport))->sendRequest($request);
 echo "response: \n";
 echo "  -- status: " . $response->getStatusCode() . "\n";
 echo "  -- content: \n\n";
 echo $response->getBody()->getContents() . "\n\n";
 echo "  -- end \n\n\n";
 
+echo "\n\nWITH temporary middleware\n";
+
+echo (new HttpClient($dispatcher2, $transport))
+        ->withTemporaryMiddlewares([new HelloWorldMiddleware($factory)])
+        ->sendRequest($request)
+        ->getBody()->getContents() . "\n\n";
+
+echo (new HttpClient($dispatcher, $transport))
+        ->withTemporaryMiddlewares([new HelloWorldMiddleware($factory)])
+        ->sendRequest($request)
+        ->getBody()->getContents() . "\n\n";
