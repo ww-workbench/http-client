@@ -12,9 +12,7 @@ $factory = new Psr17Factory();
 $request = $factory->createRequest('GET', 'http://example.com');
 
 echo "request: " . $request->getMethod() . " " . (string)$request->getUri() . "\n";
-
 $response = (new CurlClient($factory))->sendRequest($request);
-
 echo "response: \n";
 echo "  -- status: " . $response->getStatusCode() . "\n";
 echo "  -- content: \n\n";
