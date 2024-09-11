@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace WebWizardry\Http\Client\Middleware;
 
+use LogicException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use WebWizardry\Http\Client\ClientMiddlewareFactoryInterface;
@@ -12,7 +13,7 @@ use WebWizardry\Http\Client\ClientMiddlewareInterface;
 final readonly class ClientMiddlewareFactory implements ClientMiddlewareFactoryInterface
 {
     public function __construct(
-        private ContainerInterface $container
+        private ?ContainerInterface $container = null
     ) {}
 
     /**
@@ -24,6 +25,11 @@ final readonly class ClientMiddlewareFactory implements ClientMiddlewareFactoryI
         if ($definition instanceof ClientMiddlewareInterface) {
             return $definition;
         }
+
+        if (!$this->container) {
+            throw new LogicException('Container required to resolve definitions');
+        }
+
         $middleware = $this->container->get($definition);
         assert($middleware instanceof ClientMiddlewareInterface);
         return $middleware;

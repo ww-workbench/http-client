@@ -1,10 +1,9 @@
 {
   "name": "webwizardry/http-client",
   "type": "library",
-  "description": "",
+  "description": "PSR-7 Compatible HTTP(s) Client via cUrl",
   "license": "BSD-3-Clause",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
+  "minimum-stability": "stable",
   "authors": [
     {
       "name": "Alexey Volkov",
@@ -13,12 +12,10 @@
   ],
   "require": {
     "php": ">=8.3",
+    "ext-curl": "*",
     "psr/http-client": "^1.0",
     "psr/container": "^2.0",
     "webwizardry/http": "^1.0"
-  },
-  "require-dev": {
-    "webwizardry/container": "^1.0"
   },
   "autoload": {
     "psr-4": {
