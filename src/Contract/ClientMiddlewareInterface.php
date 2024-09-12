@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace WebWizardry\Http\Client;
+namespace WebWizardry\Http\Client\Contract;
 
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;

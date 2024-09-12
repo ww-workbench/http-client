@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace WebWizardry\Http\Client\Middleware;
 
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use WebWizardry\Http\Client\ClientMiddlewareInterface;
+use WebWizardry\Http\Client\Contract\ClientMiddlewareInterface;
 
-final class ClientMiddlewareStack implements ClientInterface
+final class MiddlewareStack
 {
     private ?ClientInterface $stack = null;
 
@@ -17,6 +18,9 @@ final class ClientMiddlewareStack implements ClientInterface
         private readonly array $middlewares = []
     ) {}
 
+    /**
+     * @throws ClientExceptionInterface
+     */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         if (null === $this->stack) {

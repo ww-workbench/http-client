@@ -5,12 +5,11 @@ namespace WebWizardry\Http\Client\Middleware;
 
 use LogicException;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use WebWizardry\Http\Client\ClientMiddlewareFactoryInterface;
 use Psr\Container\ContainerInterface;
-use WebWizardry\Http\Client\ClientMiddlewareInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use WebWizardry\Http\Client\Contract\ClientMiddlewareInterface;
 
-final readonly class ClientMiddlewareFactory implements ClientMiddlewareFactoryInterface
+final readonly class MiddlewareFactory
 {
     public function __construct(
         private ?ContainerInterface $container = null

@@ -11,7 +11,7 @@ use Psr\Http\Message\ResponseInterface;
 use WebWizardry\Http\Client\Exceptions\NetworkException;
 use WebWizardry\Http\Client\Exceptions\RequestException;
 
-final class CurlClient implements ClientInterface
+final class CurlTransport implements ClientInterface
 {
     private readonly CurlOptions $options;
     private ?CurlHandle $ch = null;
